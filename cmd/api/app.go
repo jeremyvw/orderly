@@ -22,5 +22,12 @@ func main() {
 	}
 	defer db.Close()
 
-	// To Do: Initialize Redis, repositories, services, and start the HTTP server.
+	uc := initUsecase(db)
+	h := initHandler(uc)
+	router := initRoute(h)
+
+	log.Printf("listening on :%s", cfg.httpPort)
+	if err := router.Run(":" + cfg.httpPort); err != nil {
+		log.Fatalf("run server: %v", err)
+	}
 }
